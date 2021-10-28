@@ -1,0 +1,56 @@
+/********************* imports  **************************/
+import express from "express";
+
+import userRouter from "./routes/userRoutes.js";
+import sequelize from "./util/database.js";
+import User from "./models/userModel.js";
+import Post from "./models/postModel.js";
+import Comment from "./models/commentModel.js";
+
+/******************** init *****************************/
+const app = express();
+
+app.use(express.urlencoded({ extended: true }));
+
+/******************** routes ****************************/
+
+// home route
+app.get("/", (req, res) => {
+  res.send("Home Page");
+});
+
+// user routes
+app.use(userRouter);
+
+// post routes
+
+// comment routes
+
+// 404 route
+app.get("*", (req, res) => {
+  res.status(404).send("Page not found");
+});
+
+/****************** database **************************/
+
+// relations
+
+// one to many relation (one user have many posts)
+User.hasMany(Post);
+Post.belongsTo(User, { constraints: true, onDelete: "CASCADE" });
+
+// one to many relation (one post have many comments)
+Post.hasMany(Comment);
+Comment.belongsTo(Post, { constraints: true, onDelete: "CASCADE" });
+
+// sync
+sequelize
+  .sync()
+  .then((res) => {
+    app.listen("3001", () => {
+      console.log("Server running");
+    });
+  })
+  .catch((err) => {
+    console.log(err);
+  });
