@@ -4,6 +4,7 @@ import bodyParser from "body-parser";
 
 import userRouter from "./routes/userRoutes.js";
 import postRouter from "./routes/postRoutes.js";
+import commentRouter from "./routes/commentRoutes.js";
 import sequelize from "./util/database.js";
 import User from "./models/userModel.js";
 import Post from "./models/postModel.js";
@@ -27,7 +28,9 @@ app.use(userRouter);
 
 // post routes
 app.use(postRouter);
+
 // comment routes
+app.use(commentRouter);
 
 // 404 route
 app.get("*", (req, res) => {
