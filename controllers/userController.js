@@ -17,7 +17,7 @@ export const addUser = (req, res) => {
       res.send("user added successfully");
     })
     .catch((err) => {
-      res.send("error adding user");
+      res.send("error");
     });
 };
 
@@ -34,7 +34,7 @@ export const getSingleUser = (req, res) => {
       }
     })
     .catch((err) => {
-      res.send(err);
+      res.send("error");
     });
 };
 
@@ -51,7 +51,7 @@ export const deleteUser = (req, res) => {
       }
     })
     .catch((err) => {
-      res.send(err.message);
+      res.send("error");
     });
 };
 

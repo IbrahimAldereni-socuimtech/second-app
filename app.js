@@ -3,6 +3,7 @@ import express from "express";
 import bodyParser from "body-parser";
 
 import userRouter from "./routes/userRoutes.js";
+import postRouter from "./routes/postRoutes.js";
 import sequelize from "./util/database.js";
 import User from "./models/userModel.js";
 import Post from "./models/postModel.js";
@@ -25,7 +26,7 @@ app.get("/", (req, res) => {
 app.use(userRouter);
 
 // post routes
-
+app.use(postRouter);
 // comment routes
 
 // 404 route
@@ -33,10 +34,9 @@ app.get("*", (req, res) => {
   res.status(404).send("Page not found");
 });
 
-/****************** database **************************/
+/********************* database **************************/
 
 // relations
-
 // one to many relation (one user have many posts)
 User.hasMany(Post);
 Post.belongsTo(User, { constraints: true, onDelete: "CASCADE" });
