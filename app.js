@@ -1,5 +1,6 @@
 /********************* imports  **************************/
 import express from "express";
+import bodyParser from "body-parser";
 
 import userRouter from "./routes/userRoutes.js";
 import sequelize from "./util/database.js";
@@ -10,7 +11,8 @@ import Comment from "./models/commentModel.js";
 /******************** init *****************************/
 const app = express();
 
-app.use(express.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
 
 /******************** routes ****************************/
 
