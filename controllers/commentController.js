@@ -1,9 +1,13 @@
 import Comment from "../models/commentModel.js";
 
 export const getComments = (req, res) => {
-  Comment.findAll().then((data) => {
-    res.send(data);
-  });
+  Comment.findAll()
+    .then((data) => {
+      res.send(data);
+    })
+    .catch((err) => {
+      res.status(500).send("error");
+    });
 };
 
 export const addComment = (req, res) => {
@@ -15,10 +19,10 @@ export const addComment = (req, res) => {
 
   Comment.create(commentInfo)
     .then((response) => {
-      res.send("comment added successfully");
+      res.status(201).send("comment added successfully");
     })
     .catch((err) => {
-      res.send("error");
+      res.status(500).send("error");
     });
 };
 
@@ -35,7 +39,7 @@ export const getSingleComment = (req, res) => {
       }
     })
     .catch((err) => {
-      res.send("error");
+      res.status(500).send("error");
     });
 };
 
@@ -52,7 +56,7 @@ export const deleteComment = (req, res) => {
       }
     })
     .catch((err) => {
-      res.send("error");
+      res.status(500).send("error");
     });
 };
 
@@ -79,6 +83,6 @@ export const updateComment = (req, res) => {
       res.send(response);
     })
     .catch((err) => {
-      res.send("error");
+      res.status(500).send("error");
     });
 };

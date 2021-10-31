@@ -3,56 +3,54 @@ import chaiHttp from "chai-http";
 import sinon from "sinon";
 
 import app from "../app.js";
-import User from "../models/userModel.js";
+import Post from "../models/postModel.js";
 import sequelize from "../util/database.js";
 
 chai.should();
 chai.use(chaiHttp);
 
-describe("test passing user API ", () => {
+describe("test passing post API ", () => {
   /**************************** hooks *******************************/
-  // before each test i add single user
+  // before each test i add single post
   beforeEach(() => {
-    const user = {
-      name: "test-user",
-      email: "test@test.com",
+    const post = {
+      title: "post1",
+      body: "hi",
     };
 
-    User.create(user);
+    Post.create(post);
   });
 
-  // after each test i delete all users
+  // after each test i delete all posts
   afterEach(() => {
-    User.destroy({
+    Post.destroy({
       where: {},
       truncate: true,
       restartIdentity: true,
     });
 
     // to reset the sqlite id auto increment
-    sequelize.query("UPDATE SQLITE_SEQUENCE SET SEQ=0 WHERE NAME='users'");
+    sequelize.query("UPDATE SQLITE_SEQUENCE SET SEQ=0 WHERE NAME='posts'");
   });
 
-  // after all tests i delete all users
+  // after all tests i delete all posts
   after(() => {
-    User.destroy({
+    Post.destroy({
       where: {},
       truncate: true,
       restartIdentity: true,
     });
 
     // to reset the sqlite id auto increment
-    sequelize.query("UPDATE SQLITE_SEQUENCE SET SEQ=0 WHERE NAME='users'");
-    sinon.reset();
-    sinon.restore();
+    sequelize.query("UPDATE SQLITE_SEQUENCE SET SEQ=0 WHERE NAME='posts'");
   });
 
   /**************************** tests *******************************/
-  // GET all users
-  it("should get all users", (done) => {
+  // GET all posts
+  it("should get all posts", (done) => {
     chai
       .request(app)
-      .get("/users")
+      .get("/posts")
       .end((err, res) => {
         res.should.have.status(200);
         res.body.should.be.a("array");
@@ -61,123 +59,124 @@ describe("test passing user API ", () => {
       });
   });
 
-  // test get user by id
-  it("should get single user by id", (done) => {
+  // test get post by id
+  it("should get single post by id", (done) => {
     chai
       .request(app)
-      .get("/users/" + 1)
+      .get("/posts/" + 1)
       .end((err, res) => {
         res.should.have.status(200);
         res.body.should.be.a("object");
         res.body.should.have.property("id");
-        res.body.should.have.property("name");
-        res.body.should.have.property("email");
+        res.body.should.have.property("title");
+        res.body.should.have.property("body");
         done();
       });
   });
 
-  // test can't get single user by id
-  it("should not get single user by id", (done) => {
+  // test can't get single post by id
+  it("should not get single post by id", (done) => {
     chai
       .request(app)
-      .get("/users/" + 10)
+      .get("/posts/" + 10)
       .end((err, res) => {
         res.should.have.status(200);
         res.body.should.be.a("object");
-        res.text.should.be.equal("user not found");
+        res.text.should.be.equal("post not found");
         done();
       });
   });
 
-  // test add user (post)
-  it("should add a user", (done) => {
-    const user = {
-      name: "test-user",
-      email: "test@test.com",
+  // test add post (post)
+  it("should add a post", (done) => {
+    const post = {
+      title: "post1",
+      body: "hi",
     };
     chai
       .request(app)
-      .post("/user")
-      .send(user)
+      .post("/post")
+      .send(post)
       .end((err, res) => {
         res.should.have.status(201);
-        res.text.should.be.equal("user added successfully");
+        res.text.should.be.equal("post added successfully");
         done();
       });
   });
 
-  // test update user (put)
-  it("should update a user", (done) => {
-    const user = {
-      name: "updated-user",
-      email: "updated-email",
+  // test update post (put)
+  it("should update a post", (done) => {
+    const post = {
+      title: "updated-post",
+      body: "updated-body",
+      userId: 1,
     };
     chai
       .request(app)
-      .put("/updateUser/" + 1)
-      .send(user)
+      .put("/updatePost/" + 1)
+      .send(post)
       .end((err, res) => {
         res.should.have.status(200);
         res.body.should.be.a("object");
-        res.body.name.should.be.eql("updated-user");
-        res.body.email.should.be.eql("updated-email");
+        res.body.title.should.be.eql("updated-post");
+        res.body.body.should.be.eql("updated-body");
         done();
       });
   });
 
-  // test update non existing user
-  it("should not update a user", (done) => {
-    const user = {
-      name: "updated-user",
-      email: "updated-email",
+  // test update non existing post
+  it("should not update a post", (done) => {
+    const post = {
+      title: "updated-post",
+      body: "updated-body",
     };
     chai
       .request(app)
-      .put("/updateUser/" + 10)
-      .send(user)
+      .put("/updatePost/" + 10)
+      .send(post)
       .end((err, res) => {
         res.should.have.status(200);
         res.body.should.be.a("object");
-        res.text.should.be.equal("user not found");
+        res.text.should.be.equal("post not found");
         done();
       });
   });
 
-  // test delete user (delete)
-  it("should delete a user", (done) => {
+  // test delete post (delete)
+  it("should delete a post", (done) => {
     chai
       .request(app)
-      .delete("/deleteUser/" + 1)
+      .delete("/deletePost/" + 1)
       .end((err, res) => {
         res.should.have.status(200);
-        res.text.should.be.equal("user deleted");
+        res.text.should.be.equal("post deleted");
         done();
       });
   });
 
-  // test delete for non existing user
-  it("should not delete a user", (done) => {
+  // test delete for non existing post
+  it("should not delete a post", (done) => {
     chai
       .request(app)
-      .delete("/deleteUser/" + 10)
+      .delete("/deletePost/" + 10)
       .end((err, res) => {
         res.should.have.status(200);
         res.body.should.be.a("object");
-        res.text.should.be.equal("user not found");
+        res.text.should.be.equal("post not found");
         done();
       });
   });
 });
 
 // test catch cases
-describe("test failing user API", () => {
+describe("test failing post API", () => {
   // Test findAll
 
-  it("should return error (GET all users)", (done) => {
-    const findAllStub = sinon.stub(User, "findAll").returns(Promise.reject());
+  it("should return error (GET all posts)", (done) => {
+    const findAllStub = sinon.stub(Post, "findAll").returns(Promise.reject());
     chai
       .request(app)
-      .get("/users")
+      .get("/posts")
       .end((err, res) => {
         sinon.assert.calledWith(findAllStub);
         res.should.have.status(500);
@@ -187,19 +186,20 @@ describe("test failing user API", () => {
   });
 
   // test create
+  it("should return error (add post)", (done) => {
+    const createStub = sinon.stub(Post, "create").returns(Promise.reject());
 
-  it("should return error (add user)", (done) => {
-    const createStub = sinon.stub(User, "create").returns(Promise.reject());
-    const user = {
-      name: "test-user",
-      email: "test@test.com",
+    const post = {
+      title: "updated-post",
+      body: "updated-body",
+      userId: "1",
     };
     chai
       .request(app)
-      .post("/user")
-      .send(user)
+      .post("/post")
+      .send(post)
       .end((err, res) => {
-        sinon.assert.calledWith(createStub, user);
+        sinon.assert.calledWith(createStub, post);
         res.should.have.status(500);
         res.text.should.be.equal("error");
         done();
@@ -207,13 +207,13 @@ describe("test failing user API", () => {
   });
 
   // test destroy
-  it("should return error (delete user)", (done) => {
-    const destroyStub = sinon.stub(User, "destroy").returns(Promise.reject());
+  it("should return error (delete post)", (done) => {
+    const destroyStub = sinon.stub(Post, "destroy").returns(Promise.reject());
     const arg = { where: { id: "1" } };
 
     chai
       .request(app)
-      .delete("/deleteUser/" + 1)
+      .delete("/deletePost/" + 1)
       .end((err, res) => {
         sinon.assert.calledWith(destroyStub, arg);
         res.should.have.status(500);
@@ -223,11 +223,11 @@ describe("test failing user API", () => {
   });
 
   // test findByPk
-  it("should return error (Get single user)", (done) => {
-    const findByPkStub = sinon.stub(User, "findByPk").returns(Promise.reject());
+  it("should return error (Get single post)", (done) => {
+    const findByPkStub = sinon.stub(Post, "findByPk").returns(Promise.reject());
     chai
       .request(app)
-      .get("/users/" + 1)
+      .get("/posts/" + 1)
       .end((err, res) => {
         sinon.assert.calledWith(findByPkStub, "1");
         res.should.have.status(500);
@@ -237,18 +237,17 @@ describe("test failing user API", () => {
       });
   });
 
-  it("should return error (update user)", (done) => {
-    const findByPkStub = sinon.stub(User, "findByPk").returns(Promise.reject());
+  it("should return error (update post)", (done) => {
+    const findByPkStub = sinon.stub(Post, "findByPk").returns(Promise.reject());
 
-    const user = {
-      name: "updated-user",
-      email: "updated-email",
+    const post = {
+      title: "updated-post",
+      body: "updated-body",
     };
-
     chai
       .request(app)
-      .put("/updateUser/" + 1)
-      .send(user)
+      .put("/updatePost/" + 1)
+      .send(post)
       .end((err, res) => {
         sinon.assert.calledWith(findByPkStub, "1");
         res.should.have.status(500);

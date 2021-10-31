@@ -1,9 +1,13 @@
 import Post from "../models/postModel.js";
 
 export const getPosts = (req, res) => {
-  Post.findAll().then((data) => {
-    res.send(data);
-  });
+  Post.findAll()
+    .then((data) => {
+      res.send(data);
+    })
+    .catch((err) => {
+      res.status(500).send("error");
+    });
 };
 
 export const addPost = (req, res) => {
@@ -15,10 +19,10 @@ export const addPost = (req, res) => {
 
   Post.create(postInfo)
     .then((response) => {
-      res.send("post added successfully");
+      res.status(201).send("post added successfully");
     })
     .catch((err) => {
-      res.send("error");
+      res.status(500).send("error");
     });
 };
 
@@ -35,7 +39,7 @@ export const getSinglePost = (req, res) => {
       }
     })
     .catch((err) => {
-      res.send("error");
+      res.status(500).send("error");
     });
 };
 
@@ -52,7 +56,7 @@ export const deletePost = (req, res) => {
       }
     })
     .catch((err) => {
-      res.send("error");
+      res.status(500).send("error");
     });
 };
 
@@ -79,6 +83,6 @@ export const updatePost = (req, res) => {
       res.send(response);
     })
     .catch((err) => {
-      res.send("error");
+      res.status(500).send("error");
     });
 };

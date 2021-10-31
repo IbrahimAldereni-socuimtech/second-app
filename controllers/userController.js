@@ -6,7 +6,7 @@ export const getUsers = (req, res) => {
       res.send(data);
     })
     .catch((err) => {
-      res.status(400).send("error");
+      res.status(500).send("error");
     });
 };
 
@@ -21,7 +21,7 @@ export const addUser = (req, res) => {
       res.status(201).send("user added successfully");
     })
     .catch((err) => {
-      res.status(400).send("error");
+      res.status(500).send("error");
     });
 };
 
@@ -38,7 +38,7 @@ export const getSingleUser = (req, res) => {
       }
     })
     .catch((err) => {
-      res.status(400).send("error");
+      res.status(500).send("error");
     });
 };
 
@@ -55,7 +55,7 @@ export const deleteUser = (req, res) => {
       }
     })
     .catch((err) => {
-      res.status(400).send("error");
+      res.status(500).send("error");
     });
 };
 
@@ -82,6 +82,6 @@ export const updateUser = (req, res) => {
       res.send(response);
     })
     .catch((err) => {
-      res.status(400).send("error");
+      res.status(500).send("error");
     });
 };
