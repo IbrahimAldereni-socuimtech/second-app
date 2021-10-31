@@ -1,9 +1,13 @@
 import User from "../models/userModel.js";
 
 export const getUsers = (req, res) => {
-  User.findAll().then((data) => {
-    res.send(data);
-  });
+  User.findAll()
+    .then((data) => {
+      res.send(data);
+    })
+    .catch((err) => {
+      res.status(400).send("error");
+    });
 };
 
 export const addUser = (req, res) => {
@@ -14,10 +18,10 @@ export const addUser = (req, res) => {
 
   User.create(userInfo)
     .then((response) => {
-      res.send("user added successfully");
+      res.status(201).send("user added successfully");
     })
     .catch((err) => {
-      res.send("error");
+      res.status(400).send("error");
     });
 };
 
@@ -34,7 +38,7 @@ export const getSingleUser = (req, res) => {
       }
     })
     .catch((err) => {
-      res.send("error");
+      res.status(400).send("error");
     });
 };
 
@@ -51,7 +55,7 @@ export const deleteUser = (req, res) => {
       }
     })
     .catch((err) => {
-      res.send("error");
+      res.status(400).send("error");
     });
 };
 
@@ -78,6 +82,6 @@ export const updateUser = (req, res) => {
       res.send(response);
     })
     .catch((err) => {
-      res.send("error");
+      res.status(400).send("error");
     });
 };

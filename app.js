@@ -59,3 +59,6 @@ sequelize
   .catch((err) => {
     console.log(err);
   });
+
+// for testing
+export default app;
