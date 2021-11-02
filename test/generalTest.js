@@ -1,7 +1,9 @@
-import chai from "chai";
+import chai, { expect } from "chai";
 import chaiHttp from "chai-http";
+import sinon from "sinon";
 
 import app from "../app.js";
+import sequelize from "../util/database.js";
 
 chai.should();
 chai.use(chaiHttp);
@@ -30,4 +32,11 @@ describe("home and 404 test", () => {
         done();
       });
   });
+
+  // test sequelize sync fail case
+  //   it("should return error (sequelize sync )", (done) => {
+  //     const syncStub = sinon.stub(sequelize, "sync").returns(Promise.reject());
+
+  //     done();
+  //   });
 });

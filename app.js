@@ -1,6 +1,7 @@
 /********************* imports  **************************/
 import express from "express";
 import bodyParser from "body-parser";
+import dotenv from "dotenv";
 
 import userRouter from "./routes/userRoutes.js";
 import postRouter from "./routes/postRoutes.js";
@@ -15,6 +16,7 @@ const app = express();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+dotenv.config();
 
 /******************** routes ****************************/
 
@@ -48,7 +50,7 @@ Post.belongsTo(User, { constraints: true, onDelete: "CASCADE" });
 Post.hasMany(Comment);
 Comment.belongsTo(Post, { constraints: true, onDelete: "CASCADE" });
 
-// sync
+// sync (exporting for testing)
 sequelize
   .sync()
   .then((res) => {
@@ -57,7 +59,7 @@ sequelize
     });
   })
   .catch((err) => {
-    console.log(err);
+    return err;
   });
 
 // for testing
